@@ -1,0 +1,56 @@
+server:
+  port: ${APP_PORT:8080}
+
+spring:
+  application:
+    name: docusign-backend
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8090/realms/navisow}
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:navisow_docusign}
+    username: ${POSTGRES_USER:navisow}
+    password: ${POSTGRES_PASSWORD:navisow}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 26MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{correlationId}] %-5level %logger{36} - %msg%n"
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+
+app:
+  docusign:
+    base-path: ${DOCUSIGN_BASE_PATH:https://demo.docusign.net/restapi}
+    auth-server: ${DOCUSIGN_AUTH_SERVER:account-d.docusign.com}
+    client-id: ${DOCUSIGN_CLIENT_ID:}
+    client-secret: ${DOCUSIGN_CLIENT_SECRET:}
+    redirect-uri: ${DOCUSIGN_REDIRECT_URI:http://localhost:5173/auth/docusign/callback}
+  security:
+    oidc-issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8090/realms/navisow}
+  storage:
+    local-path: ${STORAGE_LOCAL_PATH:.data/uploads}

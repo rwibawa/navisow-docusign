@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <springProfile name="!local">
+    <!-- JSON-structured output for cloud / aggregation pipelines -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <customFields>{"app":"docusign-backend"}</customFields>
+        <includeMdcKeyName>correlationId</includeMdcKeyName>
+      </encoder>
+    </appender>
+  </springProfile>
+
+  <springProfile name="local">
+    <!-- Human-readable format for local development -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n</pattern>
+      </encoder>
+    </appender>
+  </springProfile>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.navisow" level="DEBUG"/>
+  <logger name="org.springframework.security" level="WARN"/>
+  <logger name="org.hibernate.SQL" level="DEBUG"/>
+  <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+
+</configuration>
