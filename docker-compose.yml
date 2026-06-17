@@ -23,5 +23,30 @@ services:
     ports:
       - "8090:8080"
 
+  backend-advanced:
+    build:
+      context: .
+      dockerfile: backend-advanced/Dockerfile
+    container_name: navisow-backend-advanced
+    restart: unless-stopped
+    environment:
+      APP_ADVANCED_PORT: 8081
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: navisow_docusign
+      POSTGRES_USER: navisow
+      POSTGRES_PASSWORD: navisow
+      OIDC_ISSUER_URI: http://keycloak:8080/realms/navisow
+      DOCUSIGN_BASE_PATH: ${DOCUSIGN_BASE_PATH:-https://demo.docusign.net/restapi}
+      DOCUSIGN_AUTH_SERVER: ${DOCUSIGN_AUTH_SERVER:-account-d.docusign.com}
+      DOCUSIGN_CLIENT_ID: ${DOCUSIGN_CLIENT_ID:-}
+      DOCUSIGN_CLIENT_SECRET: ${DOCUSIGN_CLIENT_SECRET:-}
+      DOCUSIGN_REDIRECT_URI: ${DOCUSIGN_REDIRECT_URI:-http://localhost:5173/auth/docusign/callback}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - keycloak
+
 volumes:
   postgres-data:
